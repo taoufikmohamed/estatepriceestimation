@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>DeepSeek AI Agent</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>DeepSeek AI Prediction</h1>
+    <p>Enter 10 comma-separated numbers for prediction:</p>
+    
+    <div class="form-group">
+        <label for="inputData">Input Data (10 numbers, comma-separated):</label>
+        <input type="text" id="inputData" placeholder="0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.0">
+    </div>
+    
+    <button onclick="predict()">Predict</button>
+    
+    <div id="result">
+        <h3>Prediction Result:</h3>
+        <p id="predictionValue"></p>
+    </div>
+    
+    <script>
+        function predict() {
+            const inputData = document.getElementById('inputData').value;
+            
+            // Validate input
+            const values = inputData.split(',').map(x => parseFloat(x.trim()));
+            if (values.length !== 10 || values.some(isNaN)) {
+                alert('Please enter exactly 10 valid numbers separated by commas');
+                return;
+            }
+            
+            // Send request
+            fetch('/predict', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    input_data: inputData
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    alert('Error: ' + data.error);
+                } else {
+                    document.getElementById('predictionValue').textContent = data.prediction;
+                    document.getElementById('result').style.display = 'block';
+                }
+            })
+            .catch(error => {
+                alert('Error: ' + error);
+            });
+        }
+    </script>
+</body>
+</html>

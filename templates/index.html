@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>DeepSeek AI Agent</title>
+    <title>California Housing Price Predictor</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             max-width: 800px;
             margin: 0 auto;
             padding: 20px;
+            line-height: 1.6;
         }
         .form-group {
             margin-bottom: 15px;
@@ -15,6 +16,7 @@
         label {
             display: block;
             margin-bottom: 5px;
+            font-weight: bold;
         }
         input[type="text"] {
             width: 100%;
@@ -27,25 +29,93 @@
             color: white;
             border: none;
             cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #45a049;
         }
         #result {
             margin-top: 20px;
             padding: 15px;
             border: 1px solid #ddd;
             display: none;
+            background-color: #f9f9f9;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .feature-description {
+            font-size: 0.85em;
+            color: #666;
+            margin-top: 3px;
         }
     </style>
 </head>
 <body>
-    <h1>DeepSeek AI Prediction</h1>
-    <p>Enter 10 comma-separated numbers for prediction:</p>
+    <h1>California Housing Price Predictor</h1>
+    <p>This model predicts house prices based on various features using the California Housing dataset.</p>
+    
+    <h2>Feature Descriptions:</h2>
+    <table>
+        <tr>
+            <th>Feature</th>
+            <th>Description</th>
+        </tr>
+        <tr>
+            <td>MedInc</td>
+            <td>Median income in block group</td>
+        </tr>
+        <tr>
+            <td>HouseAge</td>
+            <td>Median house age in block group</td>
+        </tr>
+        <tr>
+            <td>AveRooms</td>
+            <td>Average number of rooms per household</td>
+        </tr>
+        <tr>
+            <td>AveBedrms</td>
+            <td>Average number of bedrooms per household</td>
+        </tr>
+        <tr>
+            <td>Population</td>
+            <td>Block group population</td>
+        </tr>
+        <tr>
+            <td>AveOccup</td>
+            <td>Average number of household members</td>
+        </tr>
+        <tr>
+            <td>Latitude</td>
+            <td>Block group latitude</td>
+        </tr>
+        <tr>
+            <td>Longitude</td>
+            <td>Block group longitude</td>
+        </tr>
+    </table>
+    
+    <p>Enter values for each feature to get a housing price prediction:</p>
     
     <div class="form-group">
-        <label for="inputData">Input Data (10 numbers, comma-separated):</label>
-        <input type="text" id="inputData" placeholder="0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.0">
+        <label for="inputData">Input Values (comma-separated):</label>
+        <input type="text" id="inputData" placeholder="8.3252,41.0,6.984127,1.023810,322.0,2.555556,37.88,-122.23">
+        <p class="feature-description">Example values provided. Enter {{ feature_names|length }} values separated by commas.</p>
     </div>
     
-    <button onclick="predict()">Predict</button>
+    <button onclick="predict()">Predict Housing Price</button>
     
     <div id="result">
         <h3>Prediction Result:</h3>
@@ -56,10 +126,10 @@
         function predict() {
             const inputData = document.getElementById('inputData').value;
             
-            // Validate input
+            // Validate input in JavaScript
             const values = inputData.split(',').map(x => parseFloat(x.trim()));
-            if (values.length !== 10 || values.some(isNaN)) {
-                alert('Please enter exactly 10 valid numbers separated by commas');
+            if (values.length !== 8) {  // California Housing has 8 features
+                alert('Please enter exactly 8 valid numbers separated by commas');
                 return;
             }
             
@@ -78,7 +148,7 @@
                 if (data.error) {
                     alert('Error: ' + data.error);
                 } else {
-                    document.getElementById('predictionValue').textContent = data.prediction;
+                    document.getElementById('predictionValue').textContent = data.message;
                     document.getElementById('result').style.display = 'block';
                 }
             })
